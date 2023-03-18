@@ -6,7 +6,7 @@ let products = await manager.consultarProductos();
 
 const app = express();
 
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/products', (req, res) => {
   const limit = req.query.limit;
@@ -14,11 +14,18 @@ app.get('/products', (req, res) => {
   res.send(result);
 });
 
-app.get('/products/:pid', (req, res) => {
-  const pid = req.params.pid;
+app.get('/products/:pid', async (req, res) => {
+
+  const pid = parseInt(req.params.pid);
+
+  const products = await manager.consultarProductos();
+
   const product = products.find(prod => prod.id === pid);
-  if(!product) return res.send("este producto no existe")
+
+  if (!product) return res.send('Este producto no existe');
+
   res.send(product);
+
 });
 
 const port = 8080;
